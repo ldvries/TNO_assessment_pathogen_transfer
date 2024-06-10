@@ -70,7 +70,16 @@ class TagData:
         if incontact == True:
                 endofcontact = self.m_measurementtimes[index]
                 contacttimes.append([startofcontact, endofcontact])
-        return contacttimes        
+        return contacttimes     
+
+    def GetPositionsForMeasurementTimes(self, times):
+        contactpositions = []
+        for timeintervals in times:
+            for index, time in enumerate(self.m_measurementtimes):
+                if time >= timeintervals[0] and time <= timeintervals[1]:
+                    contactpositions.append(self.m_tagpositions[index])
+        return contactpositions
+
 
     def AddDistances(distanceToWhichTag, distances):
         pass    
@@ -110,10 +119,32 @@ def CheckMeasurementValidity(tagdata1, tagdata2, tolerance):
             corrupted_measurement_times.append([tagdata1.m_measurementtimes[index], abs(distance_from_position-distance_to_other_tag)])
     return corrupted_measurement_times
 
-#def ShowContactHotspots():
-    # get contact times
+def ShowContactHotspots(tagdata1, tagdata2, radiusforcontact):
+    contacttimes = tagdata1.ComputeContactTimes(radiusforcontact)
+    contacttimes = tagdata2.ComputeContactTimes(radiusforcontact)
+
     # get positions from times
+    positions1 = tagdata1.GetPositionsForMeasurementTimes(contacttimes)
+    positions2 = tagdata2.GetPositionsForMeasurementTimes(contacttimes)
+
     # draw positions
+    x1 = []
+    y1 = []
+    x2 = []
+    y2 = []
+    for position in positions1:
+        x1.append(position.m_x)
+        y1.append(position.m_y)
+    for position in positions2:
+        x1.append(position.m_x)
+        y1.append(position.m_y)
+
+    fig, ax = plt.subplots()
+    ax.plot(x1, y1, 'bo')
+    ax.plot(x2, y2, 'ro')
+    plt.show()
+        
+
 
 
 extension = '.csv'
@@ -121,7 +152,7 @@ tagfilenames = ['TagA', 'TagB', 'TagC']     # Can be extended as new tags are ad
 tagnames = ['A', 'B']
 
 defaultdatafolder = 'D:/TNO_assessment/data/'    # TODO: should be entered by user in terminal
-radiusforcontact = 5
+radiusforcontact = 1.5
 measurement_error_tolerance = 0.1
 
 possibleUserInput = ['a', 'b', 'c']
@@ -170,7 +201,7 @@ while not userWantsToExit:
         case 'a':
             PrintSummary(DatasetOfInterest.m_alltagdata[0], radiusforcontact)
         case 'b':
-            pass
+            print(ShowContactHotspots(DatasetOfInterest.m_alltagdata[0], DatasetOfInterest.m_alltagdata[1], radiusforcontact))
         case 'c':
             userWantsToExit = True
 
