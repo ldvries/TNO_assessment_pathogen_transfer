@@ -127,6 +127,7 @@ def ShowContactHotspots(tagdata1, tagdata2, radiusforcontact):
     positions1 = tagdata1.GetPositionsForMeasurementTimes(contacttimes)
     positions2 = tagdata2.GetPositionsForMeasurementTimes(contacttimes)
 
+    # TODO: move to a function to avoid repetition
     # draw positions
     x1 = []
     y1 = []
@@ -136,12 +137,12 @@ def ShowContactHotspots(tagdata1, tagdata2, radiusforcontact):
         x1.append(position.m_x)
         y1.append(position.m_y)
     for position in positions2:
-        x1.append(position.m_x)
-        y1.append(position.m_y)
+        x2.append(position.m_x)
+        y2.append(position.m_y)
 
     fig, ax = plt.subplots()
     ax.plot(x1, y1, 'bo')
-    ax.plot(x2, y2, 'ro')
+    ax.plot(x2, y2, 'r+')
     plt.show()
         
 
@@ -155,7 +156,7 @@ defaultdatafolder = 'D:/TNO_assessment/data/'    # TODO: should be entered by us
 radiusforcontact = 1.5
 measurement_error_tolerance = 0.1
 
-possibleUserInput = ['a', 'b', 'c']
+possibleUserInput = ['a', 'b', 'c', 'd']
 
 # main program
 
@@ -190,7 +191,8 @@ while not userWantsToExit:
     print("Enter what you want to do: \n"
           "a : Print summary \n"
           "b : Show contact hotspots \n"
-          "c : exit program")
+          "c : Show invalid measurements \n"
+          "d : exit program")
     userinput = input()
     try:
         (userinput in possibleUserInput)
@@ -203,6 +205,8 @@ while not userWantsToExit:
         case 'b':
             print(ShowContactHotspots(DatasetOfInterest.m_alltagdata[0], DatasetOfInterest.m_alltagdata[1], radiusforcontact))
         case 'c':
+            print(f"Measurements of tag and beacon do not agree on the following data points, where the first entry is the measurement time and the second entry the difference in meters between tag and beacon data: {CheckMeasurementValidity(DatasetOfInterest.m_alltagdata[0], DatasetOfInterest.m_alltagdata[1], measurement_error_tolerance)}")
+        case 'd':
             userWantsToExit = True
 
 
