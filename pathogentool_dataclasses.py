@@ -86,5 +86,4 @@ class Position:
         self.m_y = float(yposition)
     
     def ComputeDistance(self, other_position):
-    # Should be a member of Position class? Or not as it is random which position is position1 or 2, see reasoning CheckMeasurementValidity function
         return math.sqrt((self.m_x - other_position.m_x)**2 + (self.m_y - other_position.m_y)**2)    

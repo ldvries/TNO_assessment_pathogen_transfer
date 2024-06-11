@@ -15,7 +15,6 @@ def PrintSummary(tagdata, radius):
 
 def CheckMeasurementValidity(tagdata1, tagdata2, tolerance):
     # input: two objects of type TagData
-    # maybe make this a member of TagData, and pass 1 other TagData object? Or does that not make sense as it is random which of the data is tagdata1 and which is tagdata2?
     corrupted_measurement_times = []
     for index, distance_to_other_tag in enumerate(tagdata1.m_distances_to_other_tags):
         distance_from_position = tagdata1.m_tagpositions[index].ComputeDistance(tagdata2.m_tagpositions[index])
@@ -30,13 +29,10 @@ def ShowContactHotspots(tagdata1, tagdata2, radiusforcontact):
     # get positions from times
     positions1 = tagdata1.GetPositionsForMeasurementTimes(contacttimes)
     positions2 = tagdata2.GetPositionsForMeasurementTimes(contacttimes)
-
-    # TODO: move to a function to avoid repetition
-    # draw positions
-
     x1, y1 = SeparatePositionInXandY(positions1)
     x2, y2 = SeparatePositionInXandY(positions2)
 
+    # draw positions
     fig, ax = plt.subplots()
     ax.plot(x1, y1, 'bo')
     ax.plot(x2, y2, 'r+')
